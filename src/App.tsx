@@ -1,27 +1,61 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
+// Pages
 import Index from "./pages/Index";
+import Presentation from "./pages/Presentation";
+import Services from "./pages/Services";
+import Projects from "./pages/Projects";
+import Expertise from "./pages/Expertise";
+import Partners from "./pages/Partners";
+import Contact from "./pages/Contact";
+import RSE from "./pages/RSE";
+import News from "./pages/News";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-grow pt-16">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/presentation" element={<Presentation />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/expertise" element={<Expertise />} />
+                <Route path="/partners" element={<Partners />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/rse" element={<RSE />} />
+                <Route path="/news" element={<News />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
