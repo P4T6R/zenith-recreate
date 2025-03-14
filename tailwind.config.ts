@@ -26,8 +26,8 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				zenith: {
-					red: '#c41f2b',
-					darkred: '#a51a24',
+					red: '#c4392a',
+					darkred: '#a53023',
 					gray: '#f5f5f7',
 					darkgray: '#86868b',
 					black: '#1d1d1f',

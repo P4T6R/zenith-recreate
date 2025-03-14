@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 
 const mainNavItems = [
   { title: 'Accueil', path: '/' },
@@ -38,19 +38,19 @@ const Navbar = () => {
   }, [location]);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-effect py-3' : 'bg-transparent py-5'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass-effect py-2' : 'bg-transparent py-4'}`}>
       <div className="container-custom">
         <nav className="flex items-center justify-between">
           <Link 
             to="/" 
             className="text-2xl font-bold text-zenith-red tracking-tight transition-opacity duration-300 hover:opacity-80"
-            aria-label="ZY Consult - Retour à l'accueil"
+            aria-label="ZÉNITH TOPO - Retour à l'accueil"
           >
             ZÉNITH TOPO
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-6">
             {mainNavItems.map((item) => (
               <Link
                 key={item.title}

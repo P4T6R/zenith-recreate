@@ -43,13 +43,13 @@ const Hero = ({
       }}
     >
       {overlay && (
-        <div className="absolute inset-0 bg-zenith-black/50"></div>
+        <div className="absolute inset-0 bg-zenith-black/60"></div>
       )}
       
       <div className="container-custom relative z-10">
         <div className="max-w-3xl animate-fade-in">
           {subtitle && (
-            <span className="inline-block px-3 py-1 mb-4 text-sm font-medium uppercase tracking-wider bg-zenith-red/90 text-white rounded">
+            <span className="inline-block px-4 py-1 mb-4 text-sm font-medium uppercase tracking-wider bg-zenith-red/90 text-white rounded-full">
               {subtitle}
             </span>
           )}
@@ -76,7 +76,7 @@ const Hero = ({
             {secondaryButtonText && secondaryButtonLink && (
               <Link 
                 to={secondaryButtonLink} 
-                className="inline-flex items-center px-6 py-3 rounded-lg font-medium text-white bg-transparent border border-white/30 hover:bg-white/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2"
+                className="inline-flex items-center px-6 py-3 rounded-full font-medium text-white bg-transparent border border-white/30 hover:bg-white/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2"
               >
                 {secondaryButtonText}
               </Link>
