@@ -1,168 +1,143 @@
 
-import { ChevronRight } from 'lucide-react';
+import { useRef, useEffect } from 'react';
+import { ArrowRight } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 
 interface HeroProps {
   title: string;
   subtitle?: string;
   description?: string;
-  imageSrc: string;
-  primaryButtonText?: string;
-  primaryButtonLink?: string;
-  secondaryButtonText?: string;
-  secondaryButtonLink?: string;
+  image?: string;
   overlay?: boolean;
-  height?: 'normal' | 'large' | 'small';
+  buttons?: {
+    primary?: {
+      text: string;
+      link: string;
+    };
+    secondary?: {
+      text: string;
+      link: string;
+    };
+  };
+  position?: 'center' | 'left';
+  theme?: 'light' | 'dark';
+  fullHeight?: boolean;
 }
 
 const Hero = ({
   title,
   subtitle,
   description,
-  imageSrc,
-  primaryButtonText,
-  primaryButtonLink,
-  secondaryButtonText,
-  secondaryButtonLink,
+  image = '/placeholder.svg',
   overlay = true,
-  height = 'normal',
+  buttons,
+  position = 'center',
+  theme = 'light',
+  fullHeight = true,
 }: HeroProps) => {
-  const heightClass = {
-    normal: 'min-h-[70vh]',
-    large: 'min-h-[90vh]',
-    small: 'min-h-[50vh]',
-  }[height];
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.5]);
+
+  // Parallax effect for text elements
+  const titleY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const subtitleY = useTransform(scrollYProgress, [0, 1], ['0%', '70%']);
+  const descriptionY = useTransform(scrollYProgress, [0, 1], ['0%', '90%']);
+
+  useEffect(() => {
+    // Add any additional initialization if needed
+  }, []);
+
+  const textAlignment = position === 'center' ? 'text-center mx-auto' : 'text-left';
+  const textColor = theme === 'light' ? 'text-zenith-black' : 'text-white';
+  const containerClass = fullHeight ? 'min-h-screen' : 'min-h-[60vh]';
 
   return (
-    <section 
-      className={`relative flex items-center ${heightClass} w-full overflow-hidden`}
+    <div 
+      ref={heroRef}
+      className={`relative w-full flex items-center justify-center overflow-hidden ${containerClass}`}
     >
       {/* Background with parallax effect */}
       <motion.div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${imageSrc})` }}
-        initial={{ scale: 1.1 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
-      />
-      
-      {overlay && (
-        <motion.div 
-          className="absolute inset-0 bg-zenith-black/60"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
+        className="absolute inset-0 w-full h-full -z-10"
+        style={{ y, opacity }}
+      >
+        <div 
+          className="absolute inset-0 bg-cover bg-center w-full h-full"
+          style={{ backgroundImage: `url(${image})` }}
         />
-      )}
+        {overlay && (
+          <div className={`absolute inset-0 bg-black/30 ${theme === 'dark' ? 'bg-opacity-50' : 'bg-opacity-20'}`} />
+        )}
+      </motion.div>
 
-      {/* Animated diagonal lines overlay */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0" 
-             style={{ 
-               backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.1) 1px, transparent 1px, transparent 10px)',
-               backgroundSize: '20px 20px'
-            }}
-        />
-      </div>
-      
-      <div className="container-custom relative z-10">
-        <div className="max-w-3xl">
+      {/* Content */}
+      <div className="container px-4 md:px-6 z-10 py-12">
+        <div className={`max-w-3xl ${textAlignment}`}>
           {subtitle && (
-            <motion.span 
-              className="inline-block px-4 py-1 mb-4 text-sm font-medium uppercase tracking-wider bg-zenith-red/90 text-white rounded-full"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+            <motion.div 
+              style={{ y: subtitleY }}
+              className="mb-4"
             >
-              {subtitle}
-            </motion.span>
+              <span className={`inline-block font-semibold text-sm md:text-base uppercase tracking-wide ${theme === 'light' ? 'text-zenith-red' : 'text-zenith-red'}`}>
+                {subtitle}
+              </span>
+            </motion.div>
           )}
-          
+
           <motion.h1 
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            style={{ y: titleY }}
+            className={`text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 ${textColor} animate-fade-in`}
           >
             {title}
           </motion.h1>
-          
+
           {description && (
             <motion.p 
-              className="text-lg text-white/90 mb-8 max-w-2xl"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+              style={{ y: descriptionY }}
+              className={`text-base md:text-lg mb-8 ${theme === 'light' ? 'text-zenith-black/80' : 'text-white/90'} max-w-2xl ${position === 'center' ? 'mx-auto' : ''} animate-fade-in animation-delay-200`}
             >
               {description}
             </motion.p>
           )}
-          
-          <motion.div 
-            className="flex flex-wrap gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
-            {primaryButtonText && primaryButtonLink && (
-              <Link 
-                to={primaryButtonLink.startsWith('http') ? '' : primaryButtonLink} 
-                href={primaryButtonLink.startsWith('http') ? primaryButtonLink : undefined}
-                className="relative btn-primary group overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center">
-                  {primaryButtonText}
-                  <ChevronRight size={18} className="ml-1 transition-transform duration-300 group-hover:translate-x-1" />
-                </span>
-                <span className="absolute inset-0 z-0 bg-zenith-darkred transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
-              </Link>
-            )}
-            
-            {secondaryButtonText && secondaryButtonLink && (
-              <Link 
-                to={secondaryButtonLink.startsWith('http') ? '' : secondaryButtonLink}
-                href={secondaryButtonLink.startsWith('http') ? secondaryButtonLink : undefined}
-                className="relative overflow-hidden inline-flex items-center px-6 py-3 rounded-full font-medium text-white bg-transparent border border-white/30 group hover:border-white/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2"
-              >
-                <span className="relative z-10">{secondaryButtonText}</span>
-                <span className="absolute inset-0 z-0 bg-white/10 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
-              </Link>
-            )}
-          </motion.div>
+
+          {buttons && (
+            <motion.div 
+              className={`flex flex-wrap gap-4 mt-8 ${position === 'center' ? 'justify-center' : 'justify-start'} animate-fade-in animation-delay-300`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              {buttons.primary && (
+                <Link
+                  to={buttons.primary.link}
+                  className="inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white transition-all bg-zenith-red hover:bg-zenith-darkred rounded-md shadow-sm hover:shadow-md transform hover:-translate-y-1 active:translate-y-0 animate-pulse-ring"
+                >
+                  {buttons.primary.text}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              )}
+
+              {buttons.secondary && (
+                <Link
+                  to={buttons.secondary.link}
+                  className="inline-flex items-center justify-center px-6 py-3 text-base font-medium transition-all bg-white/90 text-zenith-black hover:bg-white border border-gray-200 rounded-md hover:shadow-md transform hover:-translate-y-1 active:translate-y-0"
+                >
+                  {buttons.secondary.text}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              )}
+            </motion.div>
+          )}
         </div>
       </div>
-
-      {/* Animated scroll indicator for large heroes */}
-      {height !== 'small' && (
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ 
-            duration: 0.5, 
-            delay: 1,
-            repeat: Infinity,
-            repeatType: "reverse",
-            repeatDelay: 0.5
-          }}
-        >
-          <div className="w-8 h-12 rounded-full border-2 border-white/30 flex items-start justify-center pt-2">
-            <motion.div 
-              className="w-1.5 h-1.5 bg-white rounded-full"
-              animate={{ 
-                y: [0, 16, 0],
-              }}
-              transition={{ 
-                duration: 1.5, 
-                repeat: Infinity,
-                repeatType: "loop",
-              }}
-            />
-          </div>
-        </motion.div>
-      )}
-    </section>
+    </div>
   );
 };
 

@@ -11,6 +11,8 @@ import Footer from "./components/Footer";
 // Pages
 import Index from "./pages/Index";
 import Presentation from "./pages/Presentation";
+import Company from "./pages/presentation/Company";
+import Technology from "./pages/presentation/Technology";
 import Services from "./pages/Services.tsx";
 import Projects from "./pages/Projects";
 import Expertise from "./pages/Expertise";
@@ -46,6 +48,8 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/presentation" element={<Presentation />} />
+                <Route path="/presentation/company" element={<Company />} />
+                <Route path="/presentation/technology" element={<Technology />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/expertise" element={<Expertise />} />
